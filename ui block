@@ -1,0 +1,48 @@
+# Step 1: Import widget libraries for the UI
+import ipywidgets as widgets
+from IPython.display import display
+
+# Step 2: Create the input box and button
+title = widgets.HTML("<h2>Amazon Review Analyzer</h2>")
+
+review_box = widgets.Textarea(
+    placeholder='Type a review here... (e.g., The sound quality is amazing!)',
+    layout=widgets.Layout(width='80%', height='100px')
+)
+
+analyze_button = widgets.Button(
+    description='Analyze Sentiment',
+    button_style='info', # Blue button
+    icon='check'
+)
+
+output = widgets.Output()
+
+# Step 3: Define what happens when the button is clicked
+def run_analysis(b):
+    with output:
+        output.clear_output()
+        user_text = review_box.value
+
+        # Check if the user actually typed something
+        if user_text == "":
+            print("Please enter a review first.")
+            return
+
+        # Make a prediction
+        prediction = model.predict([user_text])[0]
+
+        # Get the confidence score (probability)
+        probability = model.predict_proba([user_text])[0]
+        confidence = max(probability) * 100
+
+        # Display the result
+        if prediction == 1:
+            print(f"Result: POSITIVE REVIEW (Confidence: {confidence:.1f}%)")
+        else:
+            print(f"Result: NEGATIVE REVIEW (Confidence: {confidence:.1f}%)")
+
+# Step 4: Link the button to the function and display everything
+analyze_button.on_click(run_analysis)
+
+display(title, review_box, analyze_button, output)
