@@ -1,0 +1,31 @@
+# Step 1: Import necessary libraries
+import pandas as pd
+import warnings
+
+# We ignore warnings to keep the output clean
+warnings.filterwarnings('ignore')
+
+print("Loading data...")
+
+# Step 2: Load the dataset from the URL
+url = "https://raw.githubusercontent.com/amankharwal/Website-data/master/amazon_alexa.tsv"
+data = pd.read_csv(url, sep='\t')
+
+# Step 3: Rename columns to be more readable
+data = data.rename(columns={'verified_reviews': 'Review', 'feedback': 'Sentiment'})
+
+# Step 4: Keep only the columns we need for analysis
+data = data[['Review', 'Sentiment']]
+
+# Step 5: Data Cleaning
+# We drop any rows that are missing values
+data.dropna(inplace=True)
+
+# We make sure all reviews are treated as text (Strings), not numbers
+data['Review'] = data['Review'].astype(str)
+
+print("Data loaded successfully!")
+print(f"Total reviews: {len(data)}")
+
+# Show the first 5 rows to check the data
+data.head()
